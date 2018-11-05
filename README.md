@@ -1,6 +1,6 @@
 # Elixircom
 
-A serial port terminal emulator for iex.
+A serial port terminal emulator for IEx.
 
 This is useful if you are using Elixir projects that
 involve communicating with serial port devices that need
