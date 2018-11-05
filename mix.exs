@@ -9,7 +9,8 @@ defmodule Elixircom.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       docs: docs(),
-      package: package()
+      package: package(),
+      description: description()
     ]
   end
 
@@ -44,5 +45,9 @@ defmodule Elixircom.MixProject do
       licenses: ["Apache-2.0"],
       links: %{"GitHub" => "https://github.com/mattludwigs/elixircom"}
     ]
+  end
+
+  defp description do
+    "Serial device terminal emulator for Elixir to be ran inside of IEx"
   end
 end
