@@ -19,24 +19,39 @@ def deps do
 end
 ```
 
-After rebuilding and starting a new `IEx` prompt, run:
+After building and starting a new `IEx` prompt, run:
 
 ```elixir
-iex(1)> Elixircom.run("/dev/tty.usbmodem14103")
+iex> Elixircom.run("/dev/tty.usbmodem14103", speed: 115_200)
 ```
 
-Note that the serial port name will be different on different
-platforms.
+The name that you use will depend on your computer. This opens a serial port on
+OSX. To get a list of serial ports, run `Nerves.UART.enumerate()`. The `speed`
+parameter is optional. See
+[`Nerves.UART.open/3`](https://hexdocs.pm/nerves_uart/Nerves.UART.html#open/3)
+for other options.
 
-This will connect your current `IEx` session with the serial port.
-
-This example connects to a raspberry pi zero running nerves:
+Here's an example of how to connect to a Raspberry Pi Zero that's running
+Nerves:
 
 ```elixir
+$ cd elixircom
+$ iex -S mix
 Erlang/OTP 21 [erts-10.0.8] [source] [64-bit] [smp:8:8] [ds:8:8:10] [async-threads:1] [hipe]
 
 Interactive Elixir (1.7.3) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> Elixircom.run "/dev/tty.usbmodem14103"
+iex> Nerves.UART.enumerate()
+%{
+  "/dev/cu.Bluetooth-Incoming-Port" => %{},
+  "/dev/cu.MALS" => %{},
+  "/dev/cu.SOC" => %{},
+  "/dev/cu.usbmodem14103" => %{
+    manufacturer: "Linux 4.14.71 with 20980000.usb",
+    product_id: 42154,
+    vendor_id: 1317
+  }
+}
+iex> Elixircom.run("/dev/tty.usbmodem14103")
 
 nil
 iex(pi@pi.local)107>
@@ -46,11 +61,10 @@ iex(pi@pi.local)108> 1 + 1
 iex(pi@pi.local)109>
 ```
 
-
 To exit out of the serial port terminal, press `Ctrl+B`.
 
 ```elixir
-iex(1)> Elixircom.run "/dev/tty.usbmodem14103"
+iex> Elixircom.run("/dev/tty.usbmodem14103")
 
 nil
 iex(pi@pi.local)158>
@@ -69,9 +83,11 @@ iex(4)>
 
 ## Known Issues
 
-Currently if you hit a runtime error when connecting to an `IEx` prompt over serial, for
-example a device running nerves, the next line waiting for input will be red along with the
-error message. To break the red coloring of the text just press enter/return. 
+Currently if you hit a runtime error when connecting to an `IEx` prompt over
+serial, for example a device running nerves, the next line waiting for input
+will be red along with the error message. To break the red coloring of the text
+just press enter/return.
 
-We are waiting for a resolution on [ERL-768](https://bugs.erlang.org/browse/ERL-768) to fix this.
+We are waiting for a resolution on
+[ERL-768](https://bugs.erlang.org/browse/ERL-768) to fix this.
 
