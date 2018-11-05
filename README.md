@@ -43,3 +43,24 @@ iex(pi@pi.local)108> 1 + 1
 iex(pi@pi.local)109>
 ```
 
+
+To exit out of the serial port terminal, press `Ctrl+B`.
+
+```
+iex(1)> Elixircom.run "/dev/tty.usbmodem14103"
+
+nil
+iex(pi@pi.local)158>
+nil
+iex(pi@pi.local)159>
+nil
+iex(pi@pi.local)160> 1 + 1
+2
+iex(pi@pi.local)161> :ok
+iex(2)>
+nil
+iex(3)>
+nil
+iex(4)>
+```
+

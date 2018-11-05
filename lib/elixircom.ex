@@ -23,12 +23,13 @@ defmodule Elixircom do
       :eof ->
         get_chars(gl, server)
 
+      [2] ->
+        Server.stop(server)
+        :ok
+
       [char] ->
         Server.handle_input(server, char)
         get_chars(gl, server)
-
-      _ ->
-        :ok
     end
   end
 end

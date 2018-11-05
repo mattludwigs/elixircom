@@ -15,6 +15,10 @@ defmodule Elixircom.Server do
     GenServer.cast(server, {:input, char})
   end
 
+  def stop(server) do
+    GenServer.stop(server)
+  end
+
   def init(opts) do
     uart_opts = Keyword.get(opts, :uart_opts)
     serial_port_name = Keyword.get(opts, :serial_port_name)
@@ -30,13 +34,8 @@ defmodule Elixircom.Server do
     end
   end
 
-  def handle_cast({:input, 2}, %State{uart: uart} = state) do
-    Nerves.UART.close(uart)
-    {:stop, :normal, state}
-  end
-
   def handle_cast({:input, char}, %State{uart: uart} = state) do
-    Nerves.UART.write(uart, key_to_uart(char))
+    UART.write(uart, key_to_uart(char))
     {:noreply, state}
   end
 
@@ -44,6 +43,11 @@ defmodule Elixircom.Server do
     data = uart_to_printable(data)
     IO.write(gl, data)
     {:noreply, state}
+  end
+
+  def terminate(:normal, %State{uart: uart})  do
+    UART.close(uart)
+    :ok
   end
 
   defp uart_to_printable(data) do
