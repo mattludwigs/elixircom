@@ -66,3 +66,11 @@ nil
 iex(4)>
 ```
 
+## Known Issues
+
+Currently if you hit a runtime error when connecting to an `IEx` prompt over serial, for
+example a device running nerves, the next line waiting for input will be red along with the
+error message. To break the red coloring of the text just press enter/return. 
+
+We are waiting for a resolution on [ERL-768](https://bugs.erlang.org/browse/ERL-768) to fix this.
+
