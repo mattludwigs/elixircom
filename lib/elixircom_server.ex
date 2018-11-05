@@ -42,18 +42,18 @@ defmodule Elixircom.Server do
 
   def handle_info({:nerves_uart, _name, data}, %State{group_leader: gl} = state) do
     data = uart_to_printable(data)
-    IO.write(gl, "#{data}")
+    IO.write(gl, data)
     {:noreply, state}
   end
 
   defp uart_to_printable(data) do
-    for <<c <- data>>, is_printable(c), into: "", do: <<c>>
+    for <<c <- data>>, into: "", do: make_printable(c)
   end
 
-  defp is_printable(?\r), do: false
-  defp is_printable(?\b), do: false
-  defp is_printable(key) when key > 128, do: false
-  defp is_printable(_), do: true
+  defp make_printable(0), do: <<>>
+  defp make_printable(?\a), do: <<>>
+  defp make_printable(?\b), do: IO.ANSI.cursor_left()
+  defp make_printable(other), do: <<other>>
 
   defp key_to_uart(10), do: <<?\r, ?\n>>
   defp key_to_uart(127), do: <<?\b>>
