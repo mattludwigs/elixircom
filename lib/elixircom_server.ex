@@ -4,7 +4,7 @@ defmodule Elixircom.Server do
   alias Nerves.UART
 
   defmodule State do
-    defstruct group_leader: nil, uart: nil, serial_port_name: nil, on_exit: nil
+    defstruct group_leader: nil, uart: nil, serial_port_name: nil
   end
 
   def start(opts) do
@@ -20,13 +20,16 @@ defmodule Elixircom.Server do
   end
 
   def init(opts) do
-    uart_opts = Keyword.get(opts, :uart_opts)
     serial_port_name = Keyword.get(opts, :serial_port_name)
+
+    uart_opts =
+      opts
+      |> Keyword.get(:uart_opts)
+      |> clean_uart_opts()
 
     with {:ok, uart} <- UART.start_link(),
          :ok <- UART.open(uart, serial_port_name, uart_opts),
-         opts = Keyword.put(opts, :uart, uart)
-    do
+         opts = Keyword.put(opts, :uart, uart) do
       {:ok, struct(State, opts)}
     else
       {:error, reason} ->
@@ -45,7 +48,7 @@ defmodule Elixircom.Server do
     {:noreply, state}
   end
 
-  def terminate(:normal, %State{uart: uart})  do
+  def terminate(:normal, %State{uart: uart}) do
     UART.close(uart)
     :ok
   end
@@ -62,4 +65,11 @@ defmodule Elixircom.Server do
   defp key_to_uart(10), do: <<?\r, ?\n>>
   defp key_to_uart(127), do: <<?\b>>
   defp key_to_uart(key), do: <<key>>
+
+  defp clean_uart_opts(uart_opts) do
+    Enum.filter(uart_opts, fn
+      {:speed, _} -> true
+      _ -> false
+    end)
+  end
 end
