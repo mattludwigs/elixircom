@@ -1,6 +1,7 @@
 # Elixircom
 
 [![CircleCI](https://circleci.com/gh/mattludwigs/elixircom.svg?style=svg)](https://circleci.com/gh/mattludwigs/elixircom)
+[![Hex version](https://img.shields.io/hexpm/v/elixircom.svg)](https://hex.pm/packages/elixircom)
 
 A serial port terminal emulator for IEx.
 
