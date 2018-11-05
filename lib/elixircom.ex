@@ -1,4 +1,5 @@
 defmodule Elixircom do
+  require Logger
   alias Elixircom.Server
 
   @type uart_opts :: {:speed, non_neg_integer}
@@ -34,7 +35,7 @@ defmodule Elixircom do
 
       {:error, _} = error ->
         :io.setopts(gl, orig_opts)
-        error
+        log_error(error)
     end
   end
 
@@ -54,5 +55,38 @@ defmodule Elixircom do
       _ ->
         :ok
     end
+  end
+
+  defp log_error({:error, :enoent} = error) do
+    Logger.error("""
+    Unable to find specified port.
+
+    Please make sure your device is plugged in and ready to
+    be connected to.
+    """)
+
+    error
+  end
+
+  defp log_error({:error, :eagain} = error) do
+    Logger.error("""
+    Serial port is already open.
+
+    Make sure you are not connecting to the port in another
+    terminal or IEx session.
+    """)
+
+    error
+  end
+
+  defp log_error({:error, :eacces} = error) do
+    Logger.error("""
+    Permission denied when opening port.
+
+    Make sure you have the correct permissions to
+    access the port.
+    """)
+
+    error
   end
 end
