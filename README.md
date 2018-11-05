@@ -1,5 +1,7 @@
 # Elixircom
 
+[![CircleCI](https://circleci.com/gh/mattludwigs/elixircom.svg?style=svg)](https://circleci.com/gh/mattludwigs/elixircom)
+
 A serial port terminal emulator for IEx.
 
 This is useful if you are using Elixir projects that
