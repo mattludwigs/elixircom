@@ -1,10 +1,11 @@
 defmodule Elixircom.Server do
   use GenServer
 
+  require Logger
   alias Nerves.UART
 
   defmodule State do
-    defstruct group_leader: nil, uart: nil, serial_port_name: nil
+    defstruct group_leader: nil, uart: nil, serial_port_name: nil, io_restore_opts: []
   end
 
   def start(opts) do
@@ -40,6 +41,20 @@ defmodule Elixircom.Server do
   def handle_cast({:input, char}, %State{uart: uart} = state) do
     UART.write(uart, key_to_uart(char))
     {:noreply, state}
+  end
+
+  def handle_info(
+        {:nerves_uart, _name, {:error, :einval}},
+        %State{group_leader: gl, io_restore_opts: io_opts} = state
+      ) do
+    Logger.warn("""
+    Looks like there is trouble with serial port communication, stopping Elixircom.
+
+    Please ensure your device is connected.
+    """)
+
+    :io.setopts(gl, io_opts)
+    {:stop, :normal, state}
   end
 
   def handle_info({:nerves_uart, _name, data}, %State{group_leader: gl} = state) do

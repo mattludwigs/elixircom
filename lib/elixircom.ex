@@ -22,7 +22,12 @@ defmodule Elixircom do
 
     :io.setopts(gl, echo: false, expand_fun: false, binary: false)
 
-    case Server.start(group_leader: gl, uart_opts: opts, serial_port_name: serial_port_name) do
+    case Server.start(
+           group_leader: gl,
+           uart_opts: opts,
+           serial_port_name: serial_port_name,
+           io_restore_opts: orig_opts
+         ) do
       {:ok, server} ->
         get_chars(gl, server)
         :io.setopts(gl, orig_opts)
@@ -45,6 +50,9 @@ defmodule Elixircom do
       [char] ->
         Server.handle_input(server, char)
         get_chars(gl, server)
+
+      _ ->
+        :ok
     end
   end
 end
