@@ -20,7 +20,7 @@ end
 
 After rebuilding and starting a new `IEx` prompt, run:
 
-```
+```elixir
 iex(1)> Elixircom.run("/dev/tty.usbmodem14103")
 ```
 
@@ -31,7 +31,7 @@ This will connect your current `IEx` session with the serial port.
 
 This example connects to a raspberry pi zero running nerves:
 
-```
+```elixir
 Erlang/OTP 21 [erts-10.0.8] [source] [64-bit] [smp:8:8] [ds:8:8:10] [async-threads:1] [hipe]
 
 Interactive Elixir (1.7.3) - press Ctrl+C to exit (type h() ENTER for help)
@@ -48,7 +48,7 @@ iex(pi@pi.local)109>
 
 To exit out of the serial port terminal, press `Ctrl+B`.
 
-```
+```elixir
 iex(1)> Elixircom.run "/dev/tty.usbmodem14103"
 
 nil
