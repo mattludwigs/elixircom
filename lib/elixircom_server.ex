@@ -1,7 +1,6 @@
 defmodule Elixircom.Server do
   use GenServer
 
-  require Logger
   alias Nerves.UART
 
   defmodule State do
@@ -47,7 +46,7 @@ defmodule Elixircom.Server do
         {:nerves_uart, _name, {:error, :einval}},
         %State{group_leader: gl, io_restore_opts: io_opts} = state
       ) do
-    Logger.warn("""
+    IO.puts("""
     Looks like there is trouble with serial port communication, stopping Elixircom.
 
     Please ensure your device is connected.
