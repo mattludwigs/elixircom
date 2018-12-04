@@ -14,7 +14,7 @@ To use it, add this project to your deps:
 ```elixir
 def deps do
   [
-    {:elixircom, "~> 0.1.0"}
+    {:elixircom, "~> 0.2.0"}
   ]
 end
 ```
