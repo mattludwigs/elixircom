@@ -1,7 +1,7 @@
 defmodule Elixircom.Server do
   use GenServer
 
-  alias Nerves.UART
+  alias Circuits.UART
 
   defmodule State do
     defstruct group_leader: nil, uart: nil, serial_port_name: nil, io_restore_opts: []
@@ -43,7 +43,7 @@ defmodule Elixircom.Server do
   end
 
   def handle_info(
-        {:nerves_uart, _name, {:error, :einval}},
+        {:circuits_uart, _name, {:error, :einval}},
         %State{group_leader: gl, io_restore_opts: io_opts} = state
       ) do
     IO.puts("""
@@ -56,7 +56,7 @@ defmodule Elixircom.Server do
     {:stop, :normal, state}
   end
 
-  def handle_info({:nerves_uart, _name, data}, %State{group_leader: gl} = state) do
+  def handle_info({:circuits_uart, _name, data}, %State{group_leader: gl} = state) do
     data = uart_to_printable(data)
     IO.write(gl, data)
     {:noreply, state}

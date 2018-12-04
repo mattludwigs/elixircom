@@ -26,9 +26,9 @@ iex> Elixircom.run("/dev/tty.usbmodem14103", speed: 115_200)
 ```
 
 The name that you use will depend on your computer. This opens a serial port on
-OSX. To get a list of serial ports, run `Nerves.UART.enumerate()`. The `speed`
+OSX. To get a list of serial ports, run `Circuits.UART.enumerate()`. The `speed`
 parameter is optional. See
-[`Nerves.UART.open/3`](https://hexdocs.pm/nerves_uart/Nerves.UART.html#open/3)
+[`Circuits.UART.open/3`](https://hexdocs.pm/circuits_uart/Circuits.UART.html#open/3)
 for other options.
 
 Here's an example of how to connect to a Raspberry Pi Zero that's running
@@ -40,7 +40,7 @@ $ iex -S mix
 Erlang/OTP 21 [erts-10.0.8] [source] [64-bit] [smp:8:8] [ds:8:8:10] [async-threads:1] [hipe]
 
 Interactive Elixir (1.7.3) - press Ctrl+C to exit (type h() ENTER for help)
-iex> Nerves.UART.enumerate()
+iex> Circuits.UART.enumerate()
 %{
   "/dev/cu.Bluetooth-Incoming-Port" => %{},
   "/dev/cu.MALS" => %{},
