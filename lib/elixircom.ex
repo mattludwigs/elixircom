@@ -17,7 +17,8 @@ defmodule Elixircom do
   ```
   """
 
-  @type uart_opts :: {:speed, non_neg_integer}
+  @type uart_opt :: {:speed, non_neg_integer}
+  @type uart_opts :: [uart_opts()]
 
   @doc """
   Run `Elixircom`
@@ -39,7 +40,7 @@ defmodule Elixircom do
     gl = Process.group_leader()
     orig_opts = :io.getopts(gl)
 
-    :io.setopts(gl, echo: false, expand_fun: false, binary: false)
+    :io.setopts(gl, echo: false, expand_fun: fn _ -> {:no, "", []} end, binary: false)
 
     case Server.start(
            group_leader: gl,
