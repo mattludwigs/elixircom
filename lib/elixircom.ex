@@ -34,7 +34,7 @@ defmodule Elixircom do
 
   * `:speed` - the baud rate
   """
-  @spec run(serial_port_name :: binary, uart_opts) :: :ok
+  @spec run(serial_port_name :: String.t(), uart_opts()) :: :ok
   def run(serial_port_name, opts \\ []) do
     gl = Process.group_leader()
     orig_opts = :io.getopts(gl)
