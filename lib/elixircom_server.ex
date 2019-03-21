@@ -1,9 +1,12 @@
 defmodule Elixircom.Server do
   use GenServer
 
+  @moduledoc false
+
   alias Circuits.UART
 
   defmodule State do
+    @moduledoc false
     defstruct group_leader: nil, uart: nil, serial_port_name: nil, io_restore_opts: []
   end
 
