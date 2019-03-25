@@ -1,24 +1,31 @@
 defmodule Elixircom.Server do
   use GenServer
 
+  @moduledoc false
+
   alias Circuits.UART
 
   defmodule State do
+    @moduledoc false
     defstruct group_leader: nil, uart: nil, serial_port_name: nil, io_restore_opts: []
   end
 
+  @spec start(keyword()) :: GenServer.on_start()
   def start(opts) do
     GenServer.start(__MODULE__, opts)
   end
 
+  @spec handle_input(GenServer.server(), integer()) :: :ok
   def handle_input(server, char) do
     GenServer.cast(server, {:input, char})
   end
 
+  @spec stop(GenServer.server()) :: :ok
   def stop(server) do
     GenServer.stop(server)
   end
 
+  @impl true
   def init(opts) do
     serial_port_name = Keyword.get(opts, :serial_port_name)
 
@@ -37,11 +44,13 @@ defmodule Elixircom.Server do
     end
   end
 
+  @impl true
   def handle_cast({:input, char}, %State{uart: uart} = state) do
     UART.write(uart, key_to_uart(char))
     {:noreply, state}
   end
 
+  @impl true
   def handle_info(
         {:circuits_uart, _name, {:error, :einval}},
         %State{group_leader: gl, io_restore_opts: io_opts} = state
@@ -56,12 +65,14 @@ defmodule Elixircom.Server do
     {:stop, :normal, state}
   end
 
+  @impl true
   def handle_info({:circuits_uart, _name, data}, %State{group_leader: gl} = state) do
     data = uart_to_printable(data)
     IO.write(gl, data)
     {:noreply, state}
   end
 
+  @impl true
   def terminate(:normal, %State{uart: uart}) do
     UART.close(uart)
     :ok

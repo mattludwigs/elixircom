@@ -1,26 +1,46 @@
 defmodule Elixircom do
   alias Elixircom.Server
 
-  @type uart_opts :: {:speed, non_neg_integer}
+  @moduledoc """
+  A serial port terminal emulator for IEx
+
+  Run interactively be starting it from the `IEx` prompt. Here's an example
+  that uses `Elixircom` to interact with a modem:
+
+  ```elixir
+  iex> Elixircom.run("/dev/tty.usbmodem14103", speed: 115_200)
+  AT
+  OK
+
+  ^B
+  iex>
+  ```
+  """
+
+  @type uart_opt :: {:speed, non_neg_integer}
+  @type uart_opts :: [uart_opts()]
 
   @doc """
   Run `Elixircom`
 
-  This will, in effect, make your IEx session into a serial port terminal emulator.
+  This will, in effect, make your IEx session into a serial port terminal
+  emulator.
 
   You can always get back to your original IEx session by pressing: `Ctrl+B`
 
   The first argument is the serial port name which is string of the serial port
   device you are trying to connect to.
 
-  The second argument is a keyword list of `uart_opts`.
+  The second argument is a keyword list of options:
+
+  * `:speed` - the baud rate
   """
-  @spec run(serial_port_name :: binary, uart_opts) :: :ok
+  @spec run(serial_port_name :: String.t(), uart_opts()) :: :ok
   def run(serial_port_name, opts \\ []) do
     gl = Process.group_leader()
     orig_opts = :io.getopts(gl)
 
-    :io.setopts(gl, echo: false, expand_fun: false, binary: false)
+    :io.setopts(gl, echo: false, expand_fun: fn _ -> {:no, "", []} end, binary: false)
 
     case Server.start(
            group_leader: gl,
